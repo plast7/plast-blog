@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "config-blog"
+version = "0.1.0"
+description = ""
+authors = ["plast7 <plast1206@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+django = "^5.1"
+djangorestframework = "^3.15.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
