@@ -47,7 +47,7 @@ function CategoryPage() {
         {translatedCategoryName} 카테고리의 글 목록
         </h1>
         <div className="flex pt-8 justify-center mb-8">
-          <img src="/static/line.svg" alt="line" />
+          <img src="/line.svg" alt="line" />
         </div>
         <p className="text-center text-lg text-gray-600">
           현재 작성된 글이 없습니다.

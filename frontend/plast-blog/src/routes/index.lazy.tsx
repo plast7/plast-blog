@@ -8,7 +8,7 @@ export const Route = createLazyFileRoute('/')({
       <div
         className="absolute inset-0 bg-cover bg-center z-0"
         style={{
-          backgroundImage: 'url("../../static/main.png")',
+          backgroundImage: 'url("main.png")',
         }}
       ></div>
       <div className="absolute inset-0 bg-black opacity-40 z-10" />
