@@ -44,16 +44,16 @@ const MenuItem = ({ to, label, items }) => {
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
         >
-          <div className="mx-[20px] my-[20px] grid grid-cols-[120px_120px_120px] gap-x-12" role="menu" aria-orientation="horizontal" aria-labelledby="options-menu">
+          <div className="mx-[20px] my-[10px] grid grid-cols-[120px_120px_120px] gap-x-12" role="menu" aria-orientation="horizontal" aria-labelledby="options-menu">
             {items.map((item, index) => (
               <div key={index} className="w-[120px] p-4">
-                <h3 className="font-bold text-[24px] text-plast-red mb-2">{item.label}</h3>
+                <h3 className="font-bold text-[20px] text-plast-red mb-2">{item.label}</h3>
                 <div className="">
                   {item.subItems && item.subItems.map((subItem, subIndex) => (
                     <Link
                       key={subIndex}
                       to={subItem.to}
-                      className="my-[26px] block font-bold text-[20px] text-gray-700 hover:bg-red-100 hover:text-red-400 py-1 rounded"
+                      className="my-[10px] block font-bold text-[16px] text-gray-700 hover:bg-red-100 hover:text-red-400 py-1 rounded"
                     >
                       {subItem.label}
                     </Link>
@@ -95,6 +95,8 @@ const Header = ({ bgOpacity = 'bg-opacity-70' }) => {
                     { label: "알고리즘", to: "/category/algorithms" },
                     { label: "운영체제", to: "/category/operating-systems" },
                     { label: "아키텍처", to: "/category/architecture" },
+                    { label: "네트워크", to: "/category/network" },
+                    { label: "데이터베이스", to: "/category/database" },
                   ]
                 },
                 { 

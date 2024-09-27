@@ -6,6 +6,8 @@ export function english2korean(word: string): string {
     'algorithms': '알고리즘',
     'operating-systems': '운영체제',
     'architecture': '아키텍처',
+    'network': '네트워크',
+    'database': '데이터베이스',
     'machine-learning': '머신러닝',
     'statistics': '수리통계',
     'review': '회고',

@@ -11,11 +11,17 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as StarImport } from './routes/star'
 import { Route as IndexImport } from './routes/index'
 import { Route as PostPostIdImport } from './routes/post/$postId'
 import { Route as CategoryCategoryNameImport } from './routes/category/$categoryName'
 
 // Create/Update Routes
+
+const StarRoute = StarImport.update({
+  path: '/star',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const IndexRoute = IndexImport.update({
   path: '/',
@@ -43,6 +49,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
+    '/star': {
+      id: '/star'
+      path: '/star'
+      fullPath: '/star'
+      preLoaderRoute: typeof StarImport
+      parentRoute: typeof rootRoute
+    }
     '/category/$categoryName': {
       id: '/category/$categoryName'
       path: '/category/$categoryName'
@@ -64,12 +77,14 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/star': typeof StarRoute
   '/category/$categoryName': typeof CategoryCategoryNameRoute
   '/post/$postId': typeof PostPostIdRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/star': typeof StarRoute
   '/category/$categoryName': typeof CategoryCategoryNameRoute
   '/post/$postId': typeof PostPostIdRoute
 }
@@ -77,27 +92,30 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
+  '/star': typeof StarRoute
   '/category/$categoryName': typeof CategoryCategoryNameRoute
   '/post/$postId': typeof PostPostIdRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/category/$categoryName' | '/post/$postId'
+  fullPaths: '/' | '/star' | '/category/$categoryName' | '/post/$postId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/category/$categoryName' | '/post/$postId'
-  id: '__root__' | '/' | '/category/$categoryName' | '/post/$postId'
+  to: '/' | '/star' | '/category/$categoryName' | '/post/$postId'
+  id: '__root__' | '/' | '/star' | '/category/$categoryName' | '/post/$postId'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  StarRoute: typeof StarRoute
   CategoryCategoryNameRoute: typeof CategoryCategoryNameRoute
   PostPostIdRoute: typeof PostPostIdRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  StarRoute: StarRoute,
   CategoryCategoryNameRoute: CategoryCategoryNameRoute,
   PostPostIdRoute: PostPostIdRoute,
 }
@@ -115,12 +133,16 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
+        "/star",
         "/category/$categoryName",
         "/post/$postId"
       ]
     },
     "/": {
       "filePath": "index.tsx"
+    },
+    "/star": {
+      "filePath": "star.tsx"
     },
     "/category/$categoryName": {
       "filePath": "category/$categoryName.tsx"
