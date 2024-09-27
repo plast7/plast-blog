@@ -10,6 +10,7 @@ export default defineConfig({
     viteReact(),
     // ...,
   ],
+  base: '/',
   css: {
     postcss: './postcss.config.cjs',
   },
