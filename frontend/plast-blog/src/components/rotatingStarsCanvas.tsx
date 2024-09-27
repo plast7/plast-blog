@@ -2,7 +2,7 @@ import React, { useRef, useEffect } from 'react';
 
 const MAJOR_AXIS = 100;
 const MINOR_AXIS = 97;
-const ROTATION_ANGLE = 1.5;
+const ROTATION_ANGLE = 1.6;
 
 class Star {
   constructor(width, height) {
@@ -34,8 +34,8 @@ class Star {
 
   update() {
     this.angle += this.rotationSpeed;
-    this.x = (Math.cos(this.angle) * this.a) * Math.cos(ROTATION_ANGLE) + (Math.sin(this.angle) * this.b) * Math.sin(ROTATION_ANGLE);
-    this.y = (Math.cos(this.angle) * this.a) * Math.sin(ROTATION_ANGLE) + (Math.sin(this.angle) * this.b) * Math.cos(ROTATION_ANGLE);
+    this.y = (Math.cos(this.angle) * this.a) * Math.cos(ROTATION_ANGLE) + (Math.sin(this.angle) * this.b) * Math.sin(ROTATION_ANGLE);
+    this.x = (Math.cos(this.angle) * this.a) * Math.sin(ROTATION_ANGLE) + (Math.sin(this.angle) * this.b) * Math.cos(ROTATION_ANGLE);
 
     // 트레일 업데이트
     this.trails.push({ x: this.x, y: this.y });
