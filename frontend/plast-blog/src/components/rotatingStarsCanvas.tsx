@@ -20,14 +20,14 @@ class Star {
     this.distance = Math.random()
 
     // 장축과 단축 설정 (랜덤 또는 고정)
-    this.a = this.maxDistance * MAJOR_AXIS * this.distance / 100;
-    this.b = this.maxDistance * MINOR_AXIS * this.distance / 100;
+    this.a = this.maxDistance * MAJOR_AXIS * this.distance / 100 * 2;
+    this.b = this.maxDistance * MINOR_AXIS * this.distance / 100 * 2;
 
     this.angle = Math.random() * Math.PI * 2;
     this.rotationSpeed = ((Math.random() * 0.0025) + 0.001) * 2.3; // 속도 다르게 설정
-    this.size = (Math.random() * 0.4 + 0.4) * 0.75;
-    if(this.distance < 0.1)
-      this.size = (Math.random() * 0.1 + 0.3) * 0.75;
+    this.size = (Math.random() * 0.4 + 0.4) * 1.1;
+    if(this.distance < 0.2)
+      this.size = (Math.random() * 0.1 + 0.3) * 1.1;
     this.trails = [];
     this.maxTrails = 150; // 트레일 길이 조절
   }
