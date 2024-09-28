@@ -42,9 +42,9 @@ jobs:
       run: poetry install --no-root --no-interaction --no-ansi
       working-directory: backend/plast-blog
 
-    - name: Collect static files
-      run: poetry run python manage.py collectstatic --noinput
-      working-directory: backend/plast-blog
+    # - name: Collect static files
+    #   run: poetry run python manage.py collectstatic --noinput
+    #   working-directory: backend/plast-blog
 
     - name: List files (디버깅용)
       run: ls -la
@@ -57,6 +57,5 @@ jobs:
           --platform managed \
           --source . \
           --allow-unauthenticated \
-          --quiet \
-          --set-env-vars SECRET_KEY=${{ secrets.SECRET_KEY }},DB_HOST=${{ secrets.DB_HOST }},DB_PORT=${{ secrets.DB_PORT }},DB_NAME=${{ secrets.DB_NAME }},DB_USER=${{ secrets.DB_USER }},DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+          --quiet
       working-directory: backend/plast-blog
