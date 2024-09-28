@@ -78,6 +78,7 @@ declare module '@tanstack/react-router' {
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/star': typeof StarRoute
+  '/star2': typeof Star2Route
   '/category/$categoryName': typeof CategoryCategoryNameRoute
   '/post/$postId': typeof PostPostIdRoute
 }
@@ -85,6 +86,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/star': typeof StarRoute
+  '/star2': typeof Star2Route
   '/category/$categoryName': typeof CategoryCategoryNameRoute
   '/post/$postId': typeof PostPostIdRoute
 }
@@ -99,10 +101,19 @@ export interface FileRoutesById {
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/star' | '/category/$categoryName' | '/post/$postId'
+  fullPaths:
+    | '/'
+    | '/star'
+    | '/category/$categoryName'
+    | '/post/$postId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/star' | '/category/$categoryName' | '/post/$postId'
-  id: '__root__' | '/' | '/star' | '/category/$categoryName' | '/post/$postId'
+  to: '/' | '/star' | '/star2' | '/category/$categoryName' | '/post/$postId'
+  id:
+    | '__root__'
+    | '/'
+    | '/star'
+    | '/category/$categoryName'
+    | '/post/$postId'
   fileRoutesById: FileRoutesById
 }
 
@@ -134,6 +145,7 @@ export const routeTree = rootRoute
       "children": [
         "/",
         "/star",
+        "/star2",
         "/category/$categoryName",
         "/post/$postId"
       ]
@@ -143,6 +155,9 @@ export const routeTree = rootRoute
     },
     "/star": {
       "filePath": "star.tsx"
+    },
+    "/star2": {
+      "filePath": "star2.tsx"
     },
     "/category/$categoryName": {
       "filePath": "category/$categoryName.tsx"

@@ -1,8 +1,8 @@
 import React, { useRef, useEffect } from 'react';
 
 const MAJOR_AXIS = 100;
-const MINOR_AXIS = 97;
-const ROTATION_ANGLE = 1.6;
+const MINOR_AXIS = 98;
+const ROTATION_ANGLE = 177 / 360 * Math.PI * 2;
 
 class Star {
   constructor(width, height) {
@@ -24,18 +24,18 @@ class Star {
     this.b = this.maxDistance * MINOR_AXIS * this.distance / 100 * 2;
 
     this.angle = Math.random() * Math.PI * 2;
-    this.rotationSpeed = ((Math.random() * 0.0025) + 0.001) * 2.3; // 속도 다르게 설정
+    this.rotationSpeed = ((Math.random() * 0.0025) + 0.001) * 2.6; // 속도 다르게 설정
     this.size = (Math.random() * 0.4 + 0.4) * 1.1;
     if(this.distance < 0.2)
       this.size = (Math.random() * 0.1 + 0.3) * 1.1;
     this.trails = [];
-    this.maxTrails = 150; // 트레일 길이 조절
+    this.maxTrails = 120; // 트레일 길이 조절
   }
 
   update() {
     this.angle += this.rotationSpeed;
-    this.y = (Math.cos(this.angle) * this.a) * Math.cos(ROTATION_ANGLE) + (Math.sin(this.angle) * this.b) * Math.sin(ROTATION_ANGLE);
-    this.x = (Math.cos(this.angle) * this.a) * Math.sin(ROTATION_ANGLE) + (Math.sin(this.angle) * this.b) * Math.cos(ROTATION_ANGLE);
+    this.x = (Math.cos(this.angle) * this.a) * Math.cos(ROTATION_ANGLE) + (Math.sin(this.angle) * this.b) * Math.sin(ROTATION_ANGLE);
+    this.y = (Math.cos(this.angle) * this.a) * Math.sin(ROTATION_ANGLE) + (Math.sin(this.angle) * this.b) * Math.cos(ROTATION_ANGLE);
 
     // 트레일 업데이트
     this.trails.push({ x: this.x, y: this.y });
