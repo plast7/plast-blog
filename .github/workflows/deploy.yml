@@ -24,6 +24,22 @@ jobs:
         project_id: ${{ secrets.GCP_PROJECT_ID }}
         export_default_credentials: true
 
+    - name: Install Poetry (디버깅용)
+      run: |
+        curl -sSL https://install.python-poetry.org | python3 -
+        echo "::add-path::${HOME}/.local/bin"
+
+    - name: Verify Poetry Installation (디버깅용)
+      run: |
+        poetry --version
+
+    - name: Collect static files (디버깅용)
+      run: |
+        poetry run python manage.py collectstatic --noinput
+
+    - name: List files (디버깅용)
+      run: ls -la
+
     - name: Deploy to Cloud Run
       run: |
         gcloud run deploy plast-blog \
