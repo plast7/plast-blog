@@ -24,16 +24,20 @@ jobs:
         project_id: ${{ secrets.GCP_PROJECT_ID }}
         export_default_credentials: true
 
-    - name: Install Poetry (디버깅용)
+    - name: Install Poetry
       run: |
         curl -sSL https://install.python-poetry.org | python3 -
-        echo "::add-path::${HOME}/.local/bin"
+        echo "${HOME}/.local/bin" >> $GITHUB_PATH
 
-    - name: Verify Poetry Installation (디버깅용)
+    - name: Verify Poetry Installation
       run: |
         poetry --version
 
-    - name: Collect static files (디버깅용)
+    - name: Install Dependencies
+      run: |
+        poetry install --no-root --no-interaction --no-ansi
+
+    - name: Collect static files
       run: |
         poetry run python manage.py collectstatic --noinput
 
@@ -47,4 +51,5 @@ jobs:
           --platform managed \
           --source . \
           --allow-unauthenticated \
-          --quiet
+          --quiet \
+          --set-env-vars SECRET_KEY=${{ secrets.SECRET_KEY }},DB_HOST=${{ secrets.DB_HOST }},DB_PORT=${{ secrets.DB_PORT }},DB_NAME=${{ secrets.DB_NAME }},DB_USER=${{ secrets.DB_USER }},DB_PASSWORD=${{ secrets.DB_PASSWORD }}
