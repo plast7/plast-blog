@@ -36,7 +36,7 @@ DEBUG = True
 ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
-    'https://.com', # prod backend
+    '*', # TODO: github action, prod backend
 ]
 
 ALLOWED_ORIGINS = [
