@@ -30,19 +30,20 @@ jobs:
         echo "${HOME}/.local/bin" >> $GITHUB_PATH
 
     - name: Verify Poetry Installation
-      run: |
-        poetry --version
+      run: poetry --version
+      working-directory: backend/plast-blog
 
     - name: Install Dependencies
-      run: |
-        poetry install --no-root --no-interaction --no-ansi
+      run: poetry install --no-root --no-interaction --no-ansi
+      working-directory: backend/plast-blog
 
     - name: Collect static files
-      run: |
-        poetry run python manage.py collectstatic --noinput
+      run: poetry run python manage.py collectstatic --noinput
+      working-directory: backend/plast-blog
 
     - name: List files (디버깅용)
       run: ls -la
+      working-directory: backend/plast-blog
 
     - name: Deploy to Cloud Run
       run: |
@@ -53,3 +54,4 @@ jobs:
           --allow-unauthenticated \
           --quiet \
           --set-env-vars SECRET_KEY=${{ secrets.SECRET_KEY }},DB_HOST=${{ secrets.DB_HOST }},DB_PORT=${{ secrets.DB_PORT }},DB_NAME=${{ secrets.DB_NAME }},DB_USER=${{ secrets.DB_USER }},DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+      working-directory: backend/plast-blog
