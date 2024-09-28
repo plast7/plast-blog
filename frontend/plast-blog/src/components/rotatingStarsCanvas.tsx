@@ -25,9 +25,9 @@ class Star {
 
     this.angle = Math.random() * Math.PI * 2;
     this.rotationSpeed = ((Math.random() * 0.0025) + 0.001) * 2.6; // 속도 다르게 설정
-    this.size = (Math.random() * 0.4 + 0.4) * 1.1;
+    this.size = (Math.random() * 0.4 + 0.4) * 1.1 * 0.8;
     if(this.distance < 0.2)
-      this.size = (Math.random() * 0.1 + 0.3) * 1.1;
+      this.size = (Math.random() * 0.1 + 0.3) * 1.1 * 0.8;
     this.trails = [];
     this.maxTrails = 120; // 트레일 길이 조절
   }
