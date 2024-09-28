@@ -24,22 +24,11 @@ jobs:
         project_id: ${{ secrets.GCP_PROJECT_ID }}
         export_default_credentials: true
 
-    - name: Configure Docker for Google Cloud
-      run: |
-        gcloud auth configure-docker
-
-    - name: Build the Docker image
-      run: |
-        docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/django-backend:${{ github.sha }} .
-
-    - name: Push the Docker image to Google Container Registry
-      run: |
-        docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/django-backend:${{ github.sha }}
-
     - name: Deploy to Cloud Run
       run: |
         gcloud run deploy django-backend \
-          --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/django-backend:${{ github.sha }} \
           --region us-central1 \
           --platform managed \
-          --allow-unauthenticated
+          --source . \
+          --allow-unauthenticated \
+          --quiet
