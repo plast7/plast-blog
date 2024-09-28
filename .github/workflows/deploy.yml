@@ -1,4 +1,4 @@
-name: Deploy to GCP Cloud Run
+name: Deploy to Cloud Run
 
 on:
   push:
@@ -10,52 +10,30 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      # 코드 체크아웃
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Authenticate to Google Cloud
-      uses: google-github-actions/auth@v1
-      with:
-        credentials_json: ${{ secrets.GCP_SA_KEY }}
+      # 설정된 시크릿을 사용하여 GCP 인증
+      - name: Setup GCP credentials
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
 
-    - name: Set up Cloud SDK
-      uses: google-github-actions/setup-gcloud@v1
-      with:
-        project_id: ${{ secrets.GCP_PROJECT_ID }}
-        export_default_credentials: true
+      # 설정된 프로젝트 설정
+      - name: Set up GCP project
+        run: gcloud config set project ${{ secrets.GCP_PROJECT }}
 
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.11'  # 원하는 Python 버전으로 설정
+      # Docker 이미지 빌드 및 Container Registry에 푸시
+      - name: Build and push Docker image
+        run: |
+          gcloud builds submit --tag gcr.io/${{ secrets.GCP_PROJECT }}/${{ secrets.CLOUD_RUN_SERVICE }}
 
-    - name: Install Poetry
-      run: |
-        curl -sSL https://install.python-poetry.org | python3 -
-        echo "${HOME}/.local/bin" >> $GITHUB_PATH
-
-    - name: Verify Poetry Installation
-      run: poetry --version
-      working-directory: backend/plast-blog
-
-    - name: Install Dependencies
-      run: poetry install --no-root --no-interaction --no-ansi
-      working-directory: backend/plast-blog
-
-    # - name: Collect static files
-    #   run: poetry run python manage.py collectstatic --noinput
-    #   working-directory: backend/plast-blog
-
-    - name: List files (디버깅용)
-      run: ls -la
-      working-directory: backend/plast-blog
-
-    - name: Deploy to Cloud Run
-      run: |
-        gcloud run deploy plast-blog \
-          --region asia-northeast3 \
-          --platform managed \
-          --source . \
-          --allow-unauthenticated \
-          --quiet
-      working-directory: backend/plast-blog
+      # Cloud Run에 배포
+      - name: Deploy to Cloud Run
+        run: |
+          gcloud run deploy ${{ secrets.CLOUD_RUN_SERVICE }} \
+            --image gcr.io/${{ secrets.GCP_PROJECT }}/${{ secrets.CLOUD_RUN_SERVICE }} \
+            --region ${{ secrets.CLOUD_RUN_REGION }} \
+            --platform managed \
+            --allow-unauthenticated
