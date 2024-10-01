@@ -29,7 +29,7 @@ EXPOSE 8080
 ENV PORT=8080
 
 # 정적 파일 수집
-RUN python manage.py collectstatic --noinput
+# RUN python manage.py collectstatic --noinput
 
 # 애플리케이션 실행
-CMD ["gunicorn", "your_project_name.wsgi:application", "--bind", "0.0.0.0:8080"]
+CMD ["gunicorn", "plast-blog.wsgi:application", "--bind", "0.0.0.0:8080"]

@@ -10,44 +10,44 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 코드 체크아웃
+      # 1. 코드 체크아웃
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Set up Cloud SDK
+      # 2. GCP SDK 설정
       - name: Setup GCP SDK
         uses: google-github-actions/setup-gcloud@v1
         with:
-          project_id: ${{ secrets.GCP_PROJECT }}
-          service_account_key: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
+          project_id: ${{ secrets.GCP_PROJECT }}  # GCP 프로젝트 ID
+          service_account_key: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}  # 서비스 계정 키
           export_default_credentials: true
 
-      # Docker 인증 설정
+      # 3. Artifact Registry를 위한 Docker 인증 설정
       - name: Configure Docker for Artifact Registry
         run: |
-          echo ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }} | docker login -u _json_key --password-stdin https://us-central1-docker.pkg.dev
+          echo ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }} | docker login -u _json_key --password-stdin https://asia-northeast3-docker.pkg.dev
 
-      # Docker 이미지 빌드
+      # 4. Docker 이미지 빌드
       - name: Build Docker image
         run: |
-          cd backend/plast-blog
-          docker build -t my-django-app .
+          cd backend/plast-blog  # Dockerfile이 위치한 디렉토리로 이동
+          docker build -t plast-blog .
 
-      # Docker 이미지 태그 지정
+      # 5. Docker 이미지 태그 지정
       - name: Tag Docker image
         run: |
-          docker tag my-django-app us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT }}/my-django-app/my-django-app:latest
+          docker tag plast-blog asia-northeast3-docker.pkg.dev/${{ secrets.GCP_PROJECT }}/docker-repo/plast-blog:latest
 
-      # Docker 이미지 푸시
+      # 6. Docker 이미지 Artifact Registry에 푸시
       - name: Push Docker image to Artifact Registry
         run: |
-          docker push us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT }}/my-django-app/my-django-app:latest
+          docker push asia-northeast3-docker.pkg.dev/${{ secrets.GCP_PROJECT }}/docker-repo/plast-blog:latest
 
-      # Cloud Run에 배포
+      # 7. Cloud Run에 배포
       - name: Deploy to Cloud Run
         run: |
-          gcloud run deploy my-django-app \
-            --image us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT }}/my-django-app/my-django-app:latest \
-            --region ${{ secrets.GCP_REGION }} \
+          gcloud run deploy plast-blog \
+            --image asia-northeast3-docker.pkg.dev/${{ secrets.GCP_PROJECT }}/docker-repo/plast-blog:latest \
+            --region asia-northeast3 \
             --platform managed \
             --allow-unauthenticated
