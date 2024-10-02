@@ -23,7 +23,6 @@ jobs:
         name: 'Authenticate to Google Cloud'
         uses: 'google-github-actions/auth@v1'
         with:
-          token_audience: 'sts.googleapis.com'  # Audience 명시적으로 설정
           create_credentials_file: true
           workload_identity_provider: 'projects/${{ secrets.GCP_PROJECT_NUMBER }}/locations/global/workloadIdentityPools/${{ secrets.GCP_POOL_ID }}/providers/${{ secrets.GCP_PROVIDER_ID }}'
           service_account: ${{ secrets.GCP_SERVICE_ACCOUNT_EMAIL }}
@@ -33,7 +32,6 @@ jobs:
         uses: google-github-actions/setup-gcloud@v1
         with:
           project_id: ${{ secrets.GCP_PROJECT }}
-          credentials_file_path: ${{ steps.auth.outputs.credentials_file_path }}  # 인증 파일 경로 지정
 
       # 4. Artifact Registry를 위한 Docker 인증 설정
       - name: Configure Docker for Artifact Registry
