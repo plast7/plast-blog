@@ -32,7 +32,6 @@ jobs:
         uses: google-github-actions/setup-gcloud@v1
         with:
           project_id: ${{ secrets.GCP_PROJECT }}
-          export_default_credentials: true
 
       # 4. Artifact Registry를 위한 Docker 인증 설정
       - name: Configure Docker for Artifact Registry
