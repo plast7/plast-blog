@@ -32,4 +32,4 @@ ENV PORT=8080
 # RUN python manage.py collectstatic --noinput
 
 # 애플리케이션 실행
-CMD ["gunicorn", "plast-blog.wsgi:application", "--bind", "0.0.0.0:8080"]
+CMD gunicorn config.wsgi:application --bind 0.0.0.0:${PORT}
