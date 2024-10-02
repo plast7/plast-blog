@@ -5,6 +5,10 @@ on:
     branches:
       - main  # 배포를 트리거할 브랜치
 
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -15,10 +19,13 @@ jobs:
         uses: actions/checkout@v3
 
       # 2. Google Cloud 인증
-      - name: Authenticate to Google Cloud
-        uses: google-github-actions/auth@v1
+      - id: 'auth'
+        name: 'Authenticate to Google Cloud'
+        uses: 'google-github-actions/auth@v1'
         with:
-          credentials_json: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
+          create_credentials_file: true
+          workload_identity_provider: 'projects/${{ secrets.GCP_PROJECT_NUMBER }}/locations/global/workloadIdentityPools/${{ secrets.GCP_POOL_ID }}/providers/${{ secrets.GCP_PROVIDER_ID }}'
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT_EMAIL }}
 
       # 3. GCP SDK 설정
       - name: Setup GCP SDK
