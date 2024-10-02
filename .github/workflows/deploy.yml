@@ -36,7 +36,7 @@ jobs:
 
       - name: Build Docker image
         run: |
-          cd backend/plast-blog  # Dockerfile이 위치한 디렉토리로 이동
+          cd backend/plast-blog
           docker build -t plast-blog .
 
       - name: Tag Docker image
