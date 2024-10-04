@@ -54,4 +54,5 @@ jobs:
             --image asia-northeast3-docker.pkg.dev/${{ secrets.GCP_PROJECT }}/docker-repo/plast-blog:latest \
             --region asia-northeast3 \
             --platform managed \
-            --allow-unauthenticated
+            --allow-unauthenticated \
+            --update-env-vars DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }},DJANGO_DEBUG=${{ secrets.DJANGO_DEBUG }},DJANGO_ALLOWED_HOSTS=${{ secrets.DJANGO_ALLOWED_HOSTS }}

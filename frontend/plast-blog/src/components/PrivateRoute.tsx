@@ -2,16 +2,17 @@
 import React from 'react';
 import { useAuth } from '../hooks/useAuth';
 import LoadingSpinner from './LoadingSpinner';
-import { useRouter } from '@tanstack/react-router';
+import { useRouter, useRouterState } from '@tanstack/react-router';
 
 const PrivateRoute = ({ children }) => {
   const { user, isLoading, error } = useAuth();
   const router = useRouter();
+  const state = useRouterState()
 
   React.useEffect(() => {
     if (!isLoading && !user) {
       // 로그인되지 않은 상태라면 로그인 페이지로 리디렉션
-      router.navigate({ to: '/login', search: { redirectTo: router.currentRoute.path } });
+      router.navigate({ to: '/login', search: { redirectTo: state.location } });
     }
   }, [user, isLoading, router]);
 

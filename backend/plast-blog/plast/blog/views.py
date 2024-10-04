@@ -57,6 +57,7 @@ class UserLogoutView(APIView):
 
 
 class RefreshTokenView(APIView):
+    permission_classes = [AllowAny]
     def post(self, request):
         refresh_token = request.COOKIES.get(settings.SIMPLE_JWT['AUTH_COOKIE_REFRESH'])
         if refresh_token:
