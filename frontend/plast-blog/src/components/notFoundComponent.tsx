@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, createFileRoute } from '@tanstack/react-router'
-import Header from './header';
-import AnimatedWaveDriver from './animatedWaveDivider';
+import Header from './Header';
+import AnimatedWaveDriver from './AnimatedWaveDivider';
 
 
 const NotFoundComponent = () => {

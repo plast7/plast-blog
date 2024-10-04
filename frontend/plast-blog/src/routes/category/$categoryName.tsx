@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, createFileRoute } from '@tanstack/react-router'
-import Header from '../../components/header';
-import AnimatedWaveDriver from '../../components/animatedWaveDivider';
+import Header from '../../components/Header';
+import AnimatedWaveDriver from '../../components/AnimatedWaveDivider';
 import { english2korean } from '../../utils/translator';
 
 export const Route = createFileRoute('/category/$categoryName')({

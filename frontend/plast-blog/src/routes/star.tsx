@@ -1,6 +1,6 @@
 import React from 'react'
 import { createFileRoute } from '@tanstack/react-router'
-import RotatingStarsCanvas from '../components/rotatingStarsCanvas'
+import RotatingStarsCanvas from '../components/RotatingStarsCanvas'
 
 export const Route = createFileRoute('/star')({
   component: StarTwo,

@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { createLazyFileRoute, Link } from '@tanstack/react-router'
-import Header from '../components/header';
+import Header from '../components/Header';
 
 export const Route = createLazyFileRoute('/')({
   component: () => (

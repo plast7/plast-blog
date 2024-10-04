@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link, createFileRoute } from '@tanstack/react-router'
-import Header from '../../components/header'
+import Header from '../../components/Header'
 
 export const Route = createFileRoute('/post/$postId')({
   component: CategoryPage,
