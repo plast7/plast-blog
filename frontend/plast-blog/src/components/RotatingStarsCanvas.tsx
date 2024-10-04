@@ -118,7 +118,7 @@ const RotatingStarsCanvas = () => {
     <div style={{ position: 'relative', width: '100%', height: '100vh', overflow: 'hidden' }}>
       {/* 배경 이미지 */}
       <img
-        src="/public/stella.png"
+        src="/stella.png"
         alt="Background"
         style={{
           position: 'absolute',
