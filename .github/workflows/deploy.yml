@@ -55,4 +55,4 @@ jobs:
             --region asia-northeast3 \
             --platform managed \
             --allow-unauthenticated \
-            --update-env-vars DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }},DJANGO_DEBUG=${{ secrets.DJANGO_DEBUG }},DJANGO_ALLOWED_HOSTS=${{ secrets.DJANGO_ALLOWED_HOSTS }}
+            --update-env-vars "DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }},DJANGO_DEBUG=${{ secrets.DJANGO_DEBUG }},DJANGO_ALLOWED_HOSTS=${{ secrets.DJANGO_ALLOWED_HOSTS }}"
