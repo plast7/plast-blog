@@ -12,6 +12,7 @@
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as StarImport } from './routes/star'
+import { Route as LoginImport } from './routes/login'
 import { Route as IndexImport } from './routes/index'
 import { Route as PostPostIdImport } from './routes/post/$postId'
 import { Route as CategoryCategoryNameImport } from './routes/category/$categoryName'
@@ -20,6 +21,11 @@ import { Route as CategoryCategoryNameImport } from './routes/category/$category
 
 const StarRoute = StarImport.update({
   path: '/star',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const LoginRoute = LoginImport.update({
+  path: '/login',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -47,6 +53,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginImport
       parentRoute: typeof rootRoute
     }
     '/star': {
@@ -77,6 +90,7 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/login': typeof LoginRoute
   '/star': typeof StarRoute
   '/category/$categoryName': typeof CategoryCategoryNameRoute
   '/post/$postId': typeof PostPostIdRoute
@@ -84,6 +98,7 @@ export interface FileRoutesByFullPath {
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/login': typeof LoginRoute
   '/star': typeof StarRoute
   '/category/$categoryName': typeof CategoryCategoryNameRoute
   '/post/$postId': typeof PostPostIdRoute
@@ -92,6 +107,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
+  '/login': typeof LoginRoute
   '/star': typeof StarRoute
   '/category/$categoryName': typeof CategoryCategoryNameRoute
   '/post/$postId': typeof PostPostIdRoute
@@ -99,15 +115,27 @@ export interface FileRoutesById {
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/star' | '/category/$categoryName' | '/post/$postId'
+  fullPaths:
+    | '/'
+    | '/login'
+    | '/star'
+    | '/category/$categoryName'
+    | '/post/$postId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/star' | '/category/$categoryName' | '/post/$postId'
-  id: '__root__' | '/' | '/star' | '/category/$categoryName' | '/post/$postId'
+  to: '/' | '/login' | '/star' | '/category/$categoryName' | '/post/$postId'
+  id:
+    | '__root__'
+    | '/'
+    | '/login'
+    | '/star'
+    | '/category/$categoryName'
+    | '/post/$postId'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  LoginRoute: typeof LoginRoute
   StarRoute: typeof StarRoute
   CategoryCategoryNameRoute: typeof CategoryCategoryNameRoute
   PostPostIdRoute: typeof PostPostIdRoute
@@ -115,6 +143,7 @@ export interface RootRouteChildren {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  LoginRoute: LoginRoute,
   StarRoute: StarRoute,
   CategoryCategoryNameRoute: CategoryCategoryNameRoute,
   PostPostIdRoute: PostPostIdRoute,
@@ -133,6 +162,7 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
+        "/login",
         "/star",
         "/category/$categoryName",
         "/post/$postId"
@@ -140,6 +170,9 @@ export const routeTree = rootRoute
     },
     "/": {
       "filePath": "index.tsx"
+    },
+    "/login": {
+      "filePath": "login.tsx"
     },
     "/star": {
       "filePath": "star.tsx"

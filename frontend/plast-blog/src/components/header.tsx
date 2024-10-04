@@ -136,7 +136,7 @@ const Header = ({ bgOpacity = 'bg-opacity-70' }) => {
           to={'/'}
           className="text-black text-[30px] font-extrabold absolute left-1/2 transform -translate-x-1/2"
         >
-          Plast Dev
+          Plast Dev 🔭
         </Link>
         {/* <h1 className="text-black text-[30px] font-extrabold absolute left-1/2 transform -translate-x-1/2">Plast Dev</h1> */}
       </nav>

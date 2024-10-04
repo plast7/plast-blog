@@ -1,27 +1,92 @@
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate
+from django.conf import settings
+from django.shortcuts import get_object_or_404
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
+
 from rest_framework import generics, permissions, status
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from django.contrib.auth.models import User
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.authentication import JWTAuthentication
+
+
 from .serializers import UserLoginSerializer, PostSerializer, CommentSerializer
 from .models import Post, Comment
-from rest_framework.authtoken.models import Token
-from django.shortcuts import get_object_or_404
 
-# 사용자 로그인 뷰
+
+@method_decorator(csrf_exempt, name='dispatch')
 class UserLoginView(APIView):
-    """
-    POST /api/users/login
-    관리자 계정만 로그인할 수 있습니다.
-    """
-    permission_classes = [permissions.AllowAny]
-    
+    permission_classes = [AllowAny]
+
     def post(self, request):
-        serializer = UserLoginSerializer(data=request.data)
-        if serializer.is_valid():
-            user = serializer.validated_data['user']
-            token, created = Token.objects.get_or_create(user=user)
-            return Response({'token': token.key})
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        username = request.data.get('username')
+        password = request.data.get('password')
+        user = authenticate(username=username, password=password)
+        if user:
+            refresh = RefreshToken.for_user(user)
+            response = Response({"message": "로그인 성공"}, status=status.HTTP_200_OK)
+            response.set_cookie(
+                key=settings.SIMPLE_JWT['AUTH_COOKIE'],
+                value=str(refresh.access_token),
+                httponly=True,
+                secure=settings.SIMPLE_JWT['AUTH_COOKIE_SECURE'],
+                samesite=settings.SIMPLE_JWT['AUTH_COOKIE_SAMESITE'],
+                path=settings.SIMPLE_JWT['AUTH_COOKIE_PATH'],
+            )
+            response.set_cookie(
+                key=settings.SIMPLE_JWT['AUTH_COOKIE_REFRESH'],
+                value=str(refresh),
+                httponly=True,
+                secure=settings.SIMPLE_JWT['AUTH_COOKIE_SECURE'],
+                samesite=settings.SIMPLE_JWT['AUTH_COOKIE_SAMESITE'],
+                path=settings.SIMPLE_JWT['AUTH_COOKIE_PATH'],
+            )
+            return response
+        return Response({"error": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
+    
+
+class UserLogoutView(APIView):
+    def post(self, request):
+        response = Response({"message": "로그아웃 성공"}, status=status.HTTP_200_OK)
+        response.delete_cookie(settings.SIMPLE_JWT['AUTH_COOKIE'])
+        response.delete_cookie(settings.SIMPLE_JWT['AUTH_COOKIE_REFRESH'])
+        return response
+
+
+class RefreshTokenView(APIView):
+    def post(self, request):
+        refresh_token = request.COOKIES.get(settings.SIMPLE_JWT['AUTH_COOKIE_REFRESH'])
+        if refresh_token:
+            try:
+                refresh = RefreshToken(refresh_token)
+                new_access_token = refresh.access_token
+                response = Response({"message": "토큰 리프레시 성공"}, status=status.HTTP_200_OK)
+                response.set_cookie(
+                    key=settings.SIMPLE_JWT['AUTH_COOKIE'],
+                    value=str(new_access_token),
+                    httponly=True,
+                    secure=settings.SIMPLE_JWT['AUTH_COOKIE_SECURE'],
+                    samesite=settings.SIMPLE_JWT['AUTH_COOKIE_SAMESITE'],
+                    path=settings.SIMPLE_JWT['AUTH_COOKIE_PATH'],
+                )
+                return response
+            except Exception as e:
+                return Response({"error": "리프레시 토큰이 유효하지 않습니다."}, status=status.HTTP_401_UNAUTHORIZED)
+        return Response({"error": "리프레시 토큰이 없습니다."}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class CheckAuthView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        # 만약 인증이 성공하면 사용자 정보를 반환
+        user = request.user
+        return Response({"isAuthenticated": True, "username": user.username}, status=status.HTTP_200_OK)
+
 
 # 게시글 목록 조회 및 생성 뷰
 class PostListCreateView(generics.ListCreateAPIView):

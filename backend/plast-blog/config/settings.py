@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 import os
 import sys
+from datetime import timedelta
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -34,22 +35,20 @@ SECRET_KEY = 'django-insecure-jf6)du$cwy@qpw!^970r*90bzf=(ts@n%0mtq*!i)b)r+y8oep
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    'localhost',
+    'http://localhost:3001',
     '127.0.0.1',
     '*', # TODO: github action, prod backend
 ]
 
 ALLOWED_ORIGINS = [
-    'http://localhost:3001',
+    'https://localhost:3001',
     'https://plast-blog.vercel.app',
-    'https://www.plast.dev'
+    'https://www.plast.dev',
 ]
 
 CORS_ALLOWED_ORIGINS = ALLOWED_ORIGINS
 
 CORS_ALLOW_CREDENTIALS = True
-
-# Application definition
 
 INSTALLED_APPS = [
     'blog',
@@ -65,14 +64,14 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -145,6 +144,19 @@ TIME_ZONE = "Asia/Seoul"
 USE_I18N = True
 
 USE_TZ = True
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=20),
+    'AUTH_HEADER_TYPES': ('Bearer',),
+    'AUTH_COOKIE': 'PLAST_DEV_ACCESS_TOKEN',
+    'AUTH_COOKIE_REFRESH': 'PLAST_DEV_REFRESH_TOKEN',
+    'AUTH_COOKIE_PATH': '/',
+    'AUTH_COOKIE_DOMAIN': None,
+    'AUTH_COOKIE_SECURE': True,
+    'AUTH_COOKIE_HTTP_ONLY': True,
+    'AUTH_COOKIE_SAMESITE': 'None',
+}
 
 
 # Static files (CSS, JavaScript, Images)
