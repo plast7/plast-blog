@@ -75,6 +75,9 @@ jobs:
             -e DATABASE_PASSWORD=${DATABASE_PASSWORD} \
             -e DATABASE_HOST=${DATABASE_HOST} \
             -e DATABASE_PORT=${DATABASE_PORT} \
+            -e DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY} \
+            -e DJANGO_DEBUG=${DJANGO_DEBUG} \
+            -e DJANGO_ALLOWED_HOSTS=${DJANGO_ALLOWED_HOSTS} \
             asia-northeast3-docker.pkg.dev/${{ secrets.GCP_PROJECT }}/docker-repo/plast-blog:latest \
             python manage.py migrate
 
