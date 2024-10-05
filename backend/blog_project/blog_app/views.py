@@ -65,11 +65,9 @@ class UserLogoutView(APIView):
 class RefreshTokenView(APIView):
     def post(self, request):
         refresh_token = request.COOKIES.get(settings.SIMPLE_JWT['AUTH_COOKIE_REFRESH'])
-        print(refresh_token)
         if refresh_token:
             try:
                 refresh = RefreshToken(refresh_token)
-                print(refresh)
                 new_access_token = refresh.access_token
                 response = Response({"message": "토큰 리프레시 성공"}, status=status.HTTP_200_OK)
                 response.set_cookie(
@@ -82,7 +80,6 @@ class RefreshTokenView(APIView):
                 )
                 return response
             except Exception as e:
-                print(e)
                 return Response({"error": "리프레시 토큰이 유효하지 않습니다."}, status=status.HTTP_401_UNAUTHORIZED)
         return Response({"error": "리프레시 토큰이 없습니다."}, status=status.HTTP_400_BAD_REQUEST)
 

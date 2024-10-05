@@ -48,6 +48,33 @@ jobs:
         run: |
           docker push asia-northeast3-docker.pkg.dev/${{ secrets.GCP_PROJECT }}/docker-repo/plast-blog:latest
 
+      - name: Set up Cloud SQL Proxy
+        uses: 'google-github-actions/cloud-sql-proxy@v2'
+        with:
+          instances: "${{ secrets.DATABASE_HOST }}"
+          port: 5432
+
+      - name: Wait for Cloud SQL Proxy to start
+        run: |
+          sleep 10
+
+      - name: Run Django Migrations
+        env:
+          DATABSE_NAME: ${{ secrets.DATABASE_NAME }}
+          DATABASE_USER: ${{ secrets.DATABASE_USER }}
+          DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
+          DATABASE_HOST: 127.0.0.1
+          DATABASE_PORT: 5432
+        run: |
+          docker run --rm \
+            -e DATABASE_NAME=${DATABASE_NAME} \
+            -e DATABASE_USER=${DATABASE_USER} \
+            -e DATABASE_PASSWORD=${DATABASE_PASSWORD} \
+            -e DATABASE_HOST=${DATABASE_HOST} \
+            -e DATABASE_PORT=${DATABASE_PORT} \
+            asia-northeast3-docker.pkg.dev/${{ secrets.GCP_PROJECT }}/docker-repo/plast-blog:latest \
+            python manage.py migrate
+
       - name: Deploy to Cloud Run
         run: |
           gcloud run deploy plast-blog \
@@ -55,4 +82,4 @@ jobs:
             --region asia-northeast3 \
             --platform managed \
             --allow-unauthenticated \
-            --update-env-vars=^#^DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }},DJANGO_DEBUG=${{ secrets.DJANGO_DEBUG }},DJANGO_ALLOWED_HOSTS=${{ secrets.DJANGO_ALLOWED_HOSTS }}
+            --update-env-vars=^#^DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }},DJANGO_DEBUG=${{ secrets.DJANGO_DEBUG }},DJANGO_ALLOWED_HOSTS=${{ secrets.DJANGO_ALLOWED_HOSTS }},DATABASE_NAME=${{ secrets.DATABASE_NAME }},DATABASE_USER=${{ secrets.DATABASE_USER }},DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }},DATABASE_HOST=/cloudsql/${{ secrets.DATABASE_HOST }}
