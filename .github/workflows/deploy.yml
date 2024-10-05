@@ -72,7 +72,7 @@ jobs:
           DJANGO_DEBUG: ${{ secrets.DJANGO_DEBUG }}
           DJANGO_ALLOWED_HOSTS: ${{ secrets.DJANGO_ALLOWED_HOSTS }}
         run: |
-          docker run --rm \
+          docker run --rm --network=host \
             -e DATABASE_NAME=${DATABASE_NAME} \
             -e DATABASE_USER=${DATABASE_USER} \
             -e DATABASE_PASSWORD=${DATABASE_PASSWORD} \
