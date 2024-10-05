@@ -60,29 +60,77 @@ jobs:
       - name: Wait for Cloud SQL Proxy to start
         run: |
           sleep 10
+      
+          - name: Check Cloud SQL Proxy
+          run: |
+            nc -zv 127.0.0.1 5432
+            if [ $? -ne 0 ]; then
+              echo "Cloud SQL Proxy is not running correctly."
+              exit 1
+            fi
+  
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install Poetry
+        env:
+          POETRY_VERSION: 1.4.0
+        run: |
+          curl -sSL https://install.python-poetry.org | python3 - --version $POETRY_VERSION
+          echo "::add-path::${HOME}/.local/bin"
+
+      - name: Install dependencies
+        run: |
+          poetry config virtualenvs.create false
+          poetry install --no-dev --no-interaction --no-ansi
 
       - name: Run Django Migrations
         env:
           DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
           DATABASE_USER: ${{ secrets.DATABASE_USER }}
           DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
-          DATABASE_HOST: /cloudsql/${{ secrets.DATABASE_HOST }}
+          DATABASE_HOST: 127.0.0.1
           DATABASE_PORT: 5432
           DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
           DJANGO_DEBUG: ${{ secrets.DJANGO_DEBUG }}
           DJANGO_ALLOWED_HOSTS: ${{ secrets.DJANGO_ALLOWED_HOSTS }}
         run: |
-          docker run --rm --network=host \
-            -e DATABASE_NAME=${DATABASE_NAME} \
-            -e DATABASE_USER=${DATABASE_USER} \
-            -e DATABASE_PASSWORD=${DATABASE_PASSWORD} \
-            -e DATABASE_HOST=${DATABASE_HOST} \
-            -e DATABASE_PORT=${DATABASE_PORT} \
-            -e DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY} \
-            -e DJANGO_DEBUG=${DJANGO_DEBUG} \
-            -e DJANGO_ALLOWED_HOSTS=${DJANGO_ALLOWED_HOSTS} \
-            asia-northeast3-docker.pkg.dev/${{ secrets.GCP_PROJECT }}/docker-repo/plast-blog:latest \
-            python manage.py migrate
+          export DATABASE_NAME=${DATABASE_NAME}
+          export DATABASE_USER=${DATABASE_USER}
+          export DATABASE_PASSWORD=${DATABASE_PASSWORD}
+          export DATABASE_HOST=${DATABASE_HOST}
+          export DATABASE_PORT=${DATABASE_PORT}
+          export DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
+          export DJANGO_DEBUG=${DJANGO_DEBUG}
+          export DJANGO_ALLOWED_HOSTS=${DJANGO_ALLOWED_HOSTS}
+          poetry run python manage.py migrate
+  
+
+      # - name: Run Django Migrations
+      #   env:
+      #     DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
+      #     DATABASE_USER: ${{ secrets.DATABASE_USER }}
+      #     DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
+      #     DATABASE_HOST: /cloudsql/${{ secrets.DATABASE_HOST }}
+      #     DATABASE_PORT: 5432
+      #     DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
+      #     DJANGO_DEBUG: ${{ secrets.DJANGO_DEBUG }}
+      #     DJANGO_ALLOWED_HOSTS: ${{ secrets.DJANGO_ALLOWED_HOSTS }}
+      #   run: |
+      #     docker run --rm --network=host \
+      #       -e DATABASE_NAME=${DATABASE_NAME} \
+      #       -e DATABASE_USER=${DATABASE_USER} \
+      #       -e DATABASE_PASSWORD=${DATABASE_PASSWORD} \
+      #       -e DATABASE_HOST=${DATABASE_HOST} \
+      #       -e DATABASE_PORT=${DATABASE_PORT} \
+      #       -e DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY} \
+      #       -e DJANGO_DEBUG=${DJANGO_DEBUG} \
+      #       -e DJANGO_ALLOWED_HOSTS=${DJANGO_ALLOWED_HOSTS} \
+      #       asia-northeast3-docker.pkg.dev/${{ secrets.GCP_PROJECT }}/docker-repo/plast-blog:latest \
+      #       python manage.py migrate
+      
 
       - name: Deploy to Cloud Run
         run: |
