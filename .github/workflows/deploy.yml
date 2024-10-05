@@ -68,6 +68,9 @@ jobs:
           DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
           DATABASE_HOST: 127.0.0.1
           DATABASE_PORT: 5432
+          DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
+          DJANGO_DEBUG: ${{ secrets.DJANGO_DEBUG }}
+          DJANGO_ALLOWED_HOSTS: ${{ secrets.DJANGO_ALLOWED_HOSTS }}
         run: |
           docker run --rm \
             -e DATABASE_NAME=${DATABASE_NAME} \
