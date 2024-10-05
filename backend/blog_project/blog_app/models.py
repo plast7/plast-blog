@@ -10,7 +10,6 @@ class BaseModel(models.Model):
         abstract = True
 
 class User(AbstractUser):
-    # AbstractUser already includes fields like username, email, password
     bio = models.TextField(blank=True)
     birthdate = models.DateField(null=True, blank=True)
 

@@ -87,7 +87,9 @@ class RefreshTokenView(APIView):
 class CheckAuthView(APIView):
     def get(self, request):
         user = request.user
-        return Response({"isAuthenticated": True, "username": user.username}, status=status.HTTP_200_OK)
+        if user.username:
+            return Response({"isAuthenticated": True, "username": user.username}, status=status.HTTP_200_OK)
+        return Response({"error": "로그인 정보가 없습니다."}, status=status.HTTP_401_UNAUTHORIZED)
 
 
 # 게시글 목록 조회 및 생성 뷰
