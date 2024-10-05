@@ -63,7 +63,7 @@ jobs:
 
       - name: Run Django Migrations
         env:
-          DATABSE_NAME: ${{ secrets.DATABASE_NAME }}
+          DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
           DATABASE_USER: ${{ secrets.DATABASE_USER }}
           DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
           DATABASE_HOST: 127.0.0.1
