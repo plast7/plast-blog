@@ -12,15 +12,16 @@ api.interceptors.response.use(
     if (error.response.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       try {
-        await api.post('auth/token-refresh/');
+        await api.post('/auth/refresh-token/'); // 리프레시 토큰 엔드포인트 호출
         return api(originalRequest);
-      } catch (refreshError) {
-        window.location.href = '/login';
-        return Promise.reject(refreshError);
+      } catch (err) {
+        await api.post('/auth/logout/');
+        return Promise.reject(error);
       }
     }
     return Promise.reject(error);
   }
 );
+
 
 export default api;

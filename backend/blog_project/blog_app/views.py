@@ -19,8 +19,6 @@ from .models import Post, Comment
 
 @method_decorator(csrf_exempt, name='dispatch')
 class UserLoginView(APIView):
-    permission_classes = [AllowAny]
-
     def post(self, request):
         username = request.data.get('username')
         password = request.data.get('password')
@@ -51,18 +49,27 @@ class UserLoginView(APIView):
 class UserLogoutView(APIView):
     def post(self, request):
         response = Response({"message": "로그아웃 성공"}, status=status.HTTP_200_OK)
-        response.delete_cookie(settings.SIMPLE_JWT['AUTH_COOKIE'])
-        response.delete_cookie(settings.SIMPLE_JWT['AUTH_COOKIE_REFRESH'])
+        response.delete_cookie(
+            key=settings.SIMPLE_JWT['AUTH_COOKIE'],
+            samesite=settings.SIMPLE_JWT['AUTH_COOKIE_SAMESITE'],
+            path=settings.SIMPLE_JWT['AUTH_COOKIE_PATH'],
+        )
+        response.delete_cookie(
+            key=settings.SIMPLE_JWT['AUTH_COOKIE_REFRESH'],
+            samesite=settings.SIMPLE_JWT['AUTH_COOKIE_SAMESITE'],
+            path=settings.SIMPLE_JWT['AUTH_COOKIE_PATH'],
+        )
         return response
 
 
 class RefreshTokenView(APIView):
-    permission_classes = [AllowAny]
     def post(self, request):
         refresh_token = request.COOKIES.get(settings.SIMPLE_JWT['AUTH_COOKIE_REFRESH'])
+        print(refresh_token)
         if refresh_token:
             try:
                 refresh = RefreshToken(refresh_token)
+                print(refresh)
                 new_access_token = refresh.access_token
                 response = Response({"message": "토큰 리프레시 성공"}, status=status.HTTP_200_OK)
                 response.set_cookie(
@@ -75,16 +82,13 @@ class RefreshTokenView(APIView):
                 )
                 return response
             except Exception as e:
+                print(e)
                 return Response({"error": "리프레시 토큰이 유효하지 않습니다."}, status=status.HTTP_401_UNAUTHORIZED)
         return Response({"error": "리프레시 토큰이 없습니다."}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class CheckAuthView(APIView):
-    authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
-
     def get(self, request):
-        # 만약 인증이 성공하면 사용자 정보를 반환
         user = request.user
         return Response({"isAuthenticated": True, "username": user.username}, status=status.HTTP_200_OK)
 

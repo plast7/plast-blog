@@ -13,7 +13,7 @@ from .views import (
 urlpatterns = [
     path('auth/login/', UserLoginView.as_view(), name='user-login'),
     path('auth/logout/', UserLogoutView.as_view(), name='logout'),
-    path('auth/token-refresh/', RefreshTokenView.as_view(), name='token_refresh'),
+    path('auth/refresh-token/', RefreshTokenView.as_view(), name='token_refresh'),
     path('auth/check-auth/', CheckAuthView.as_view(), name='check_auth'),
     path('posts/', PostListCreateView.as_view(), name='post-list-create'),
     path('posts/<int:pk>/', PostRetrieveUpdateDestroyView.as_view(), name='post-detail'),
