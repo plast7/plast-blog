@@ -17,7 +17,7 @@ from dotenv import load_dotenv
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-sys.path.append(os.path.join(BASE_DIR, 'plast'))
+sys.path.append(os.path.join(BASE_DIR, 'blog_project'))
 
 from pathlib import Path
 
@@ -26,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 load_dotenv(os.path.join(BASE_DIR, '.env'))
 
-AUTH_USER_MODEL = 'blog.User'
+AUTH_USER_MODEL = 'blog_app.User'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
@@ -48,7 +48,7 @@ CORS_ALLOWED_ORIGINS = ALLOWED_ORIGINS
 CORS_ALLOW_CREDENTIALS = True
 
 INSTALLED_APPS = [
-    'blog',
+    'blog_app',
     'rest_framework',
     'rest_framework.authtoken',
     'corsheaders',
