@@ -37,7 +37,7 @@ jobs:
 
       - name: Build Docker image
         run: |
-          cd backend/plast-blog
+          cd backend
           docker build -t plast-blog .
 
       - name: Tag Docker image

@@ -3,7 +3,6 @@ name = "config-blog"
 version = "0.1.0"
 description = ""
 authors = ["plast7 <plast1206@gmail.com>"]
-readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.11"
