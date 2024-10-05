@@ -61,14 +61,14 @@ jobs:
         run: |
           sleep 10
       
-          - name: Check Cloud SQL Proxy
-          run: |
-            nc -zv 127.0.0.1 5432
-            if [ $? -ne 0 ]; then
-              echo "Cloud SQL Proxy is not running correctly."
-              exit 1
-            fi
-  
+      - name: Check Cloud SQL Proxy
+        run: |
+          nc -zv 127.0.0.1 5432
+          if [ $? -ne 0 ]; then
+            echo "Cloud SQL Proxy is not running correctly."
+            exit 1
+          fi
+
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
