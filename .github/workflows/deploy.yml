@@ -63,7 +63,7 @@ jobs:
       
       - name: Check Cloud SQL Proxy
         run: |
-          nc -zv 127.0.0.1 5432
+          nc -zv ${{ secrets.DATABASE_HOST }} 5432
           if [ $? -ne 0 ]; then
             echo "Cloud SQL Proxy is not running correctly."
             exit 1
