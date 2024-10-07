@@ -13,4 +13,4 @@ Backend
 - Django
 
 Database
-- SQLite
+- PostgreSQL
