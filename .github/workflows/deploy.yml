@@ -5,7 +5,6 @@ on:
     branches:
       - main
 
-# fixing
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -31,43 +30,35 @@ jobs:
         with:
           project_id: ${{ secrets.GCP_PROJECT }}
 
-      - name: Configure Docker for Artifact Registry
-        run: |
-          gcloud auth configure-docker asia-northeast3-docker.pkg.dev
+      # - name: Configure Docker for Artifact Registry
+      #   run: |
+      #     gcloud auth configure-docker asia-northeast3-docker.pkg.dev
 
-      - name: Build Docker image
+      - name: Build & Tag & Push Docker image to Artifact Registry
         run: |
           cd backend
           docker build -t plast-blog .
-
-      - name: Tag Docker image
-        run: |
           docker tag plast-blog asia-northeast3-docker.pkg.dev/${{ secrets.GCP_PROJECT }}/docker-repo/plast-blog:latest
-
-      - name: Push Docker image to Artifact Registry
-        run: |
           docker push asia-northeast3-docker.pkg.dev/${{ secrets.GCP_PROJECT }}/docker-repo/plast-blog:latest
+      
+      - name: Deploy to Cloud Run
+        run: |
+          gcloud run deploy plast-blog \
+            --image asia-northeast3-docker.pkg.dev/${{ secrets.GCP_PROJECT }}/docker-repo/plast-blog:latest \
+            --region asia-northeast3 \
+            --platform managed \
+            --allow-unauthenticated \
+            --update-env-vars=^#^DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }},DJANGO_DEBUG=${{ secrets.DJANGO_DEBUG }},DJANGO_ALLOWED_HOSTS=${{ secrets.DJANGO_ALLOWED_HOSTS }},DATABASE_NAME=${{ secrets.DATABASE_NAME }},DATABASE_USER=${{ secrets.DATABASE_USER }},DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }},DATABASE_HOST=/cloudsql/${{ secrets.DATABASE_HOST }}
 
-      - name: Download Cloud SQL Proxy
+      - name: Download & Start Cloud SQL Proxy
         run: |
           curl -o cloud-sql-proxy https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.13.0/cloud-sql-proxy.linux.amd64
           chmod +x cloud-sql-proxy
-
-      - name: Start Cloud SQL Proxy
-        run: |
           ./cloud-sql-proxy ${{ secrets.DATABASE_HOST }} &
 
       - name: Wait for Cloud SQL Proxy to start
         run: |
-          sleep 10
-      
-      - name: Check Cloud SQL Proxy
-        run: |
-          nc -zv 127.0.0.1 5432
-          if [ $? -ne 0 ]; then
-            echo "Cloud SQL Proxy is not running correctly."
-            exit 1
-          fi
+          sleep 15
 
       - name: Setup Python
         uses: actions/setup-python@v4
@@ -79,11 +70,6 @@ jobs:
           POETRY_VERSION: 1.4.0
         run: |
           curl -sSL https://install.python-poetry.org | python3 - --version $POETRY_VERSION
-          echo "::add-path::${HOME}/.local/bin"
-
-      - name: Install dependencies
-        run: |
-          poetry config virtualenvs.create false
           poetry install --no-dev --no-interaction --no-ansi
 
       - name: Run Django Migrations
@@ -129,13 +115,3 @@ jobs:
       #       -e DJANGO_ALLOWED_HOSTS=${DJANGO_ALLOWED_HOSTS} \
       #       asia-northeast3-docker.pkg.dev/${{ secrets.GCP_PROJECT }}/docker-repo/plast-blog:latest \
       #       python manage.py migrate
-      
-
-      - name: Deploy to Cloud Run
-        run: |
-          gcloud run deploy plast-blog \
-            --image asia-northeast3-docker.pkg.dev/${{ secrets.GCP_PROJECT }}/docker-repo/plast-blog:latest \
-            --region asia-northeast3 \
-            --platform managed \
-            --allow-unauthenticated \
-            --update-env-vars=^#^DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }},DJANGO_DEBUG=${{ secrets.DJANGO_DEBUG }},DJANGO_ALLOWED_HOSTS=${{ secrets.DJANGO_ALLOWED_HOSTS }},DATABASE_NAME=${{ secrets.DATABASE_NAME }},DATABASE_USER=${{ secrets.DATABASE_USER }},DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }},DATABASE_HOST=/cloudsql/${{ secrets.DATABASE_HOST }}
