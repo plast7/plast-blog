@@ -30,10 +30,6 @@ jobs:
         with:
           project_id: ${{ secrets.GCP_PROJECT }}
 
-      # - name: Configure Docker for Artifact Registry
-      #   run: |
-      #     gcloud auth configure-docker asia-northeast3-docker.pkg.dev
-
       - name: Push Docker image to Artifact Registry
         run: |
           cd backend
