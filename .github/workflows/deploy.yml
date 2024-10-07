@@ -30,13 +30,14 @@ jobs:
         with:
           project_id: ${{ secrets.GCP_PROJECT }}
 
-      - name: Configure Docker for Artifact Registry
-        run: |
-          gcloud auth configure-docker asia-northeast3-docker.pkg.dev
+      # - name: Configure Docker for Artifact Registry
+      #   run: |
+      #     gcloud auth configure-docker asia-northeast3-docker.pkg.dev
 
-      - name: Build & Tag & Push Docker image to Artifact Registry
+      - name: Push Docker image to Artifact Registry
         run: |
           cd backend
+          gcloud auth configure-docker asia-northeast3-docker.pkg.dev
           docker build -t plast-blog .
           docker tag plast-blog asia-northeast3-docker.pkg.dev/${{ secrets.GCP_PROJECT }}/docker-repo/plast-blog:latest
           docker push asia-northeast3-docker.pkg.dev/${{ secrets.GCP_PROJECT }}/docker-repo/plast-blog:latest
@@ -64,14 +65,6 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: '3.11'
-
-      # - name: Install Poetry
-      #   env:
-      #     POETRY_VERSION: 1.4.0
-      #   run: |
-      #     cd backend
-      #     curl -sSL https://install.python-poetry.org | python3 - --version $POETRY_VERSION
-      #     poetry install --no-dev --no-interaction --no-ansi
 
       - name: Run Django Migrations
         env:
