@@ -48,19 +48,14 @@ jobs:
         run: |
           docker push asia-northeast3-docker.pkg.dev/${{ secrets.GCP_PROJECT }}/docker-repo/plast-blog:latest
 
-      # - name: Download Cloud SQL Proxy
-      #   run: |
-      #     curl -o cloud-sql-proxy https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.13.0/cloud-sql-proxy.linux.amd64
-      #     chmod +x cloud-sql-proxy
-
       - name: Download Cloud SQL Proxy
         run: |
-          curl -o cloud_sql_proxy https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64
-          chmod +x cloud_sql_proxy
+          curl -o cloud-sql-proxy https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.13.0/cloud-sql-proxy.linux.amd64
+          chmod +x cloud-sql-proxy
 
       - name: Start Cloud SQL Proxy
         run: |
-          ./cloud_sql_proxy ${{ secrets.DATABASE_HOST }}=tcp:5432 &
+          ./cloud-sql-proxy ${{ secrets.DATABASE_HOST }} &
 
       - name: Wait for Cloud SQL Proxy to start
         run: |
