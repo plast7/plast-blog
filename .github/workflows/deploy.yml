@@ -55,7 +55,7 @@ jobs:
 
       - name: Start Cloud SQL Proxy
         run: |
-          ./cloud-sql-proxy --instances=${{ secrets.DATABASE_HOST }}=tcp:5432 &
+          ./cloud-sql-proxy ${{ secrets.DATABASE_HOST }}=tcp:5432 &
 
       - name: Wait for Cloud SQL Proxy to start
         run: |
