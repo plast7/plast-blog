@@ -107,7 +107,6 @@ jobs:
           export DJANGO_ALLOWED_HOSTS=${DJANGO_ALLOWED_HOSTS}
           poetry run python manage.py migrate
   
-
       # - name: Run Django Migrations
       #   env:
       #     DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
