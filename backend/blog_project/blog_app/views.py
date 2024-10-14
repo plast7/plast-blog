@@ -92,7 +92,6 @@ class CheckAuthView(APIView):
         return Response({"error": "로그인 정보가 없습니다."}, status=status.HTTP_401_UNAUTHORIZED)
 
 
-# 게시글 목록 조회 및 생성 뷰
 class PostListCreateView(generics.ListCreateAPIView):
     """
     GET /api/posts
@@ -109,7 +108,7 @@ class PostListCreateView(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
 
-# 특정 게시글 조회, 수정, 삭제 뷰
+
 class PostRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     """
     GET /api/posts/{id}
@@ -124,7 +123,7 @@ class PostRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
             return [permissions.IsAdminUser()]
         return [permissions.AllowAny()]
 
-# 댓글 목록 조회 및 생성 뷰
+
 class CommentListCreateView(generics.ListCreateAPIView):
     """
     GET /api/posts/{id}/comments
@@ -150,7 +149,7 @@ class CommentListCreateView(generics.ListCreateAPIView):
             parent = get_object_or_404(Comment, id=parent_id)
         serializer.save(post=post, parent=parent)
 
-# 특정 댓글 수정 및 삭제 뷰
+
 class CommentRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     """
     PUT /api/comments/{id}
