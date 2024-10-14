@@ -51,7 +51,7 @@ jobs:
             --region asia-northeast3 \
             --platform managed \
             --allow-unauthenticated \
-            --update-env-vars=^#^DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }},DJANGO_DEBUG=${{ secrets.DJANGO_DEBUG }},DJANGO_ALLOWED_HOSTS=${{ secrets.DJANGO_ALLOWED_HOSTS }},DATABASE_NAME=${{ secrets.DATABASE_NAME }},DATABASE_USER=${{ secrets.DATABASE_USER }},DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }},DATABASE_HOST=/cloudsql/${{ secrets.DATABASE_HOST }}
+            --update-env-vars=DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }},DJANGO_DEBUG=${{ secrets.DJANGO_DEBUG }},DJANGO_ALLOWED_HOSTS=${{ secrets.DJANGO_ALLOWED_HOSTS }},DATABASE_NAME=${{ secrets.DATABASE_NAME }},DATABASE_USER=${{ secrets.DATABASE_USER }},DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }},DATABASE_HOST=/cloudsql/${{ secrets.DATABASE_HOST }}
 
       - name: Download & Start Cloud SQL Proxy
         run: |
