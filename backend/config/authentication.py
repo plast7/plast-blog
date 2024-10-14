@@ -10,6 +10,10 @@ logger = logging.getLogger(__name__)
 class CookieJWTAuthentication(JWTAuthentication):
     def authenticate(self, request):
         token = request.COOKIES.get('PLAST_DEV_ACCESS_TOKEN')
+        if not token:
+            logger.debug("No token found in cookies.")
+            return None
+        
         try:
             token_backend = TokenBackend(
                 algorithm=settings.SIMPLE_JWT['ALGORITHM'],
