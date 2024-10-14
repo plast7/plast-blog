@@ -51,13 +51,13 @@ jobs:
             --region asia-northeast3 \
             --platform managed \
             --allow-unauthenticated \
-            --set-env-vars "DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}" \
-            --set-env-vars "DJANGO_DEBUG=${{ secrets.DJANGO_DEBUG }}" \
-            --set-env-vars "DJANGO_ALLOWED_HOSTS=${{ secrets.DJANGO_ALLOWED_HOSTS }}" \
-            --set-env-vars "DATABASE_NAME=${{ secrets.DATABASE_NAME }}" \
-            --set-env-vars "DATABASE_USER=${{ secrets.DATABASE_USER }}" \
-            --set-env-vars "DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }}" \
-            --set-env-vars "DATABASE_HOST=/cloudsql/${{ secrets.DATABASE_HOST }}"
+            --set-env-vars "^@^DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}" \
+            --set-env-vars "^@^DJANGO_DEBUG=${{ secrets.DJANGO_DEBUG }}" \
+            --set-env-vars "^@^DJANGO_ALLOWED_HOSTS=${{ secrets.DJANGO_ALLOWED_HOSTS }}" \
+            --set-env-vars "^@^DATABASE_NAME=${{ secrets.DATABASE_NAME }}" \
+            --set-env-vars "^@^DATABASE_USER=${{ secrets.DATABASE_USER }}" \
+            --set-env-vars "^@^DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }}" \
+            --set-env-vars "^@^DATABASE_HOST=/cloudsql/${{ secrets.DATABASE_HOST }}"
 
       - name: Download & Start Cloud SQL Proxy
         run: |
