@@ -24,17 +24,17 @@ class CookieJWTAuthentication(JWTAuthentication):
             logger.debug("Token is valid.")
         except TokenError as e:
             logger.error(f"Token validation error: {e}")
-            raise InvalidToken(e.args[0])
+            return None
 
         try:
             user = self.get_user(validated_token)
             logger.debug(f"Authenticated user: {user.username}")
         except Exception as e:
             logger.error(f"Error retrieving user: {e}")
-            raise InvalidToken("User not found.")
+            return None
 
         if not user.is_active:
             logger.error("User account is inactive.")
-            raise InvalidToken("User account is inactive.")
+            return None
 
         return (user, validated_token)
