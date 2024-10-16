@@ -1,6 +1,6 @@
 # config/authentication.py
 from rest_framework_simplejwt.authentication import JWTAuthentication
-from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
+from rest_framework_simplejwt.exceptions import InvalidToken, TokenError, TokenBackendError
 from rest_framework_simplejwt.backends import TokenBackend
 from django.conf import settings
 import logging
@@ -22,7 +22,7 @@ class CookieJWTAuthentication(JWTAuthentication):
             )
             validated_token = token_backend.decode(token, verify=True)
             logger.debug("Token is valid.")
-        except TokenError as e:
+        except (TokenError, TokenBackendError) as e:
             logger.error(f"Token validation error: {e}")
             return None
 
