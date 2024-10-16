@@ -51,6 +51,7 @@ jobs:
             --region asia-northeast3 \
             --platform managed \
             --allow-unauthenticated \
+            --add-cloudsql-instances=plast-blog:asia-northeast3:plast-blog-db \
             --set-env-vars "DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}" \
             --set-env-vars "DJANGO_DEBUG=${{ secrets.DJANGO_DEBUG }}" \
             --set-env-vars "^@^DJANGO_ALLOWED_HOSTS=${{ secrets.DJANGO_ALLOWED_HOSTS }}" \
@@ -85,6 +86,9 @@ jobs:
           DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
           DJANGO_DEBUG: ${{ secrets.DJANGO_DEBUG }}
           DJANGO_ALLOWED_HOSTS: ${{ secrets.DJANGO_ALLOWED_HOSTS }}
+          SUPERUSER_USERNAME: ${{ secrets.SUPERUSER_USERNAME }}
+          SUPERUSER_EMAIL: ${{ secrets.SUPERUSER_EMAIL }}
+          SUPERUSER_PASSWORD: ${{ secrets.SUPERUSER_PASSWORD }}
         run: |
           cd backend
           curl -sSL https://install.python-poetry.org | python3 - --version $POETRY_VERSION
