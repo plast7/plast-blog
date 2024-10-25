@@ -1,5 +1,7 @@
 import React from 'react'
 import { Link, createFileRoute } from '@tanstack/react-router'
+import DOMPurify from 'dompurify';
+
 import Header from '../../components/Header'
 import { getPostDetail } from '../../api/post';
 
@@ -106,15 +108,12 @@ function PostPage() {
           )} */}
           <h1 className="text-4xl font-bold text-plast-red mt-6">{post.title}</h1>
           <p className="text-gray-700 mt-2">
-            {post.author} | {new Date(post.createdAt).toLocaleDateString()} |{' '}
-            {/* <Link to={`/category/${post.category}`} className="text-blue-500">
-              {post.category}
-            </Link> */}
+            {post.author} | 작성날자 : {new Date(post.createdAt).toLocaleDateString()}
           </p>
         </div>
         <div className="mt-8 prose prose-lg max-w-none">
           <div
-            dangerouslySetInnerHTML={{ __html: post.content }}
+            dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.content) }}
           />
         </div>
       </main>
