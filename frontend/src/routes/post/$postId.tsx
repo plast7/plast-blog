@@ -1,60 +1,125 @@
 import React from 'react'
 import { Link, createFileRoute } from '@tanstack/react-router'
 import Header from '../../components/Header'
+import { getPostDetail } from '../../api/post';
 
 export const Route = createFileRoute('/post/$postId')({
-  component: CategoryPage,
+  component: PostPage,
 })
 
 interface Post {
-  id: string
-  title: string
-  subtitle: string
-  thumbnailUrl: string
-  categoryName: string
+  id: number;
+  title: string;
+  author: string;
+  category: string;
+  content: string;
+  createdAt: string;
+  updatedAt: string;
+  thumbnailUrl?: string; // TODO: 나중에 추가할 필드
 }
 
-// 이 함수는 실제 데이터를 가져오는 로직으로 대체해야 합니다
-const fetchPostsByCategory = async (categoryName: string): Promise<Post[]> => {
-  // 실제 API 호출 또는 데이터 fetching 로직
-  return []
+const fetchPost = async (postId: string): Promise<Post | null> => {
+  console.log('hi');
+  try {
+    const response = await getPostDetail({ postId });
+    return {
+      id: response.id,
+      title: response.title,
+      author: response.author,
+      category: response.category,
+      content: response.content,
+      createdAt: response.created_at,
+      updatedAt: response.updated_at,
+      thumbnailUrl: response.thumbnailUrl || '', // TODO: 처리 필요
+    };
+  } catch (error) {
+    console.error('게시글을 불러오는 중 오류 발생:', error);
+    return null;
+  }
 }
 
-function CategoryPage() {
-  const { categoryName } = Route.useParams()
-  const [posts, setPosts] = React.useState<Post[]>([])
+function PostPage() {
+  const { postId } = Route.useParams();
+  const [post, setPost] = React.useState<Post | null>(null);
+  const [loading, setLoading] = React.useState<boolean>(true);
+  const [error, setError] = React.useState<string | null>(null);
 
   React.useEffect(() => {
-    const loadPosts = async () => {
-      if (categoryName) {
-        const fetchedPosts = await fetchPostsByCategory(categoryName)
-        setPosts(fetchedPosts)
+    const loadPost = async () => {
+      if (postId) {
+        setLoading(true);
+        setError(null);
+        const fetchedPost = await fetchPost(postId);
+        if (fetchedPost) {
+          setPost(fetchedPost);
+        } else {
+          setError('게시글을 불러오는 데 실패했습니다.');
+        }
+        setLoading(false);
       }
     }
-    loadPosts()
-  }, [categoryName])
+
+    loadPost();
+  }, [postId]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-plast-main">
+        <p className="text-lg text-gray-600">로딩 중...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-plast-main">
+        <p className="text-lg text-red-600">{error}</p>
+      </div>
+    );
+  }
+
+  if (!post) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-plast-main">
+        <p className="text-lg text-gray-600">게시글을 찾을 수 없습니다.</p>
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen category-page bg-plast-main">
+    <div className="min-h-screen bg-plast-main">
       <Header />
-      <h1>{categoryName} 카테고리의 글 목록</h1>
-      <div className="post-grid">
-        {posts.map((post) => (
-          <Link
-            key={post.id}
-            to={`/category/${post.categoryName}/${post.id}`}
-            className="post-card"
-          >
+      <main className="pt-40 px-4 max-w-4xl mx-auto">
+        <div className="flex flex-col items-center">
+          {/* {post.thumbnailUrl ? (
             <img
               src={post.thumbnailUrl}
               alt={post.title}
-              className="post-thumbnail"
+              className="w-full h-64 object-cover rounded"
             />
-            <h2>{post.title}</h2>
-            <p>{post.subtitle}</p>
-          </Link>
-        ))}
-      </div>
+          ) : (
+            <img
+              src="/default-thumbnail.jpg"
+              alt="default thumbnail"
+              className="w-full h-64 object-cover rounded"
+            />
+          )} */}
+          <h1 className="text-4xl font-bold text-plast-red mt-6">{post.title}</h1>
+          <p className="text-gray-700 mt-2">
+            {post.author} | {new Date(post.createdAt).toLocaleDateString()} |{' '}
+            {/* <Link to={`/category/${post.category}`} className="text-blue-500">
+              {post.category}
+            </Link> */}
+          </p>
+        </div>
+        <div className="mt-8 prose prose-lg max-w-none">
+          <div
+            dangerouslySetInnerHTML={{ __html: post.content }}
+          />
+        </div>
+      </main>
     </div>
-  )
+  );
 }
+
+export default PostPage;

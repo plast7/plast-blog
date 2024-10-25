@@ -12,7 +12,7 @@ import Typography from '@tiptap/extension-typography'
 
 import Toolbar from '../components/Toolbar'
 import useAuth from '../hooks/useAuth';
-import { post } from '../api/post';
+import { write } from '../api/post';
 
 export const Route = createFileRoute('/write')({
   component: WritePage,
@@ -137,7 +137,7 @@ function WritePage() {
     const html = editor.getHTML();
 
     try {
-      const response = await post({
+      const response = await write({
         title,
         category,
         content: html

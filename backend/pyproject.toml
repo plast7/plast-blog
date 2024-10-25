@@ -13,6 +13,7 @@ gunicorn = "^23.0.0"
 django-cors-headers = "^4.4.0"
 python-dotenv = "^1.0.1"
 psycopg2-binary = "^2.9.9"
+django-filter = "^24.3"
 
 
 [build-system]

@@ -4,8 +4,9 @@ from django.conf import settings
 from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
+from django_filters.rest_framework import DjangoFilterBackend
 
-from rest_framework import generics, permissions, status
+from rest_framework import generics, permissions, status, filters
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -98,14 +99,20 @@ class CheckAuthView(APIView):
         return Response({"error": "로그인 정보가 없습니다."}, status=status.HTTP_401_UNAUTHORIZED)
 
 
-class PostListCreateView(generics.ListCreateAPIView):
+class PostListView(generics.ListCreateAPIView):
     """
     GET /api/v1/posts
     POST /api/v1/posts
     """
     queryset = Post.objects.all().order_by('-created_at')
     serializer_class = PostSerializer
+
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     
+    filterset_fields = ['category']
+
+    search_fields = ['title', 'content']
+
     def get_permissions(self):
         if self.request.method == 'POST':
             return [permissions.IsAdminUser()]
@@ -115,7 +122,7 @@ class PostListCreateView(generics.ListCreateAPIView):
         serializer.save(author=self.request.user)
 
 
-class PostRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+class PostDetailView(generics.RetrieveUpdateDestroyAPIView):
     """
     GET /api/v1/posts/{id}
     PUT /api/v1/posts/{id}
@@ -130,7 +137,7 @@ class PostRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
         return [permissions.AllowAny()]
 
 
-class CommentListCreateView(generics.ListCreateAPIView):
+class CommentListView(generics.ListCreateAPIView):
     """
     GET /api/v1/posts/{id}/comments
     POST /api/v1/posts/{id}/comments
@@ -156,7 +163,7 @@ class CommentListCreateView(generics.ListCreateAPIView):
         serializer.save(post=post, parent=parent)
 
 
-class CommentRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+class CommentDetailView(generics.RetrieveUpdateDestroyAPIView):
     """
     PUT /api/v1/comments/{id}
     DELETE /api/v1/comments/{id}
