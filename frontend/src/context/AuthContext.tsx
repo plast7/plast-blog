@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect } from 'react';
-import api from '../api/axiosInstance';
+import { checkAuth } from '../api/auth';
 
 interface AuthContextType {
   user: User | null;
@@ -21,9 +21,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   });
 
   useEffect(() => {
-    const checkAuth = async () => {
+    const contextCheckAuth = async () => {
       try {
-        const response = await api.get('/auth/check-auth/');
+        const response = await checkAuth();
         setAuthState({
           user: response.data,
           isAuthenticated: true,
@@ -40,7 +40,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       }
     };
 
-    checkAuth();
+    contextCheckAuth();
   }, []);
 
   const login = (userData: User) => {

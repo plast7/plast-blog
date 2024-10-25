@@ -14,9 +14,29 @@ class User(AbstractUser):
     birthdate = models.DateField(null=True, blank=True)
 
 class Post(BaseModel):
+    class Category(models.TextChoices):
+        FRONTEND = 'frontend', '프론트엔드'
+        BACKEND = 'backend', '백엔드'
+        DATA_STRUCTURES = 'data-structures', '자료구조'
+        ALGORITHMS = 'algorithms', '알고리즘'
+        OPERATING_SYSTEMS = 'operating-systems', '운영체제'
+        ARCHITECTURE = 'architecture', '아키텍처'
+        NETWORK = 'network', '네트워크'
+        DATABASE = 'database', '데이터베이스'
+        MACHINE_LEARNING = 'machine-learning', '머신러닝'
+        STATISTICS = 'statistics', '수리통계'
+        REVIEW = 'review', '회고'
+        CAREER = 'career', '커리어'
+        FITNESS = 'fitness', '헬스'
+    
     title = models.CharField(max_length=255)
     content = models.TextField()
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts')
+    category = models.CharField(
+        max_length=20,
+        choices=Category.choices,
+        default=Category.FRONTEND,
+    )
     
     def __str__(self):
         return self.title

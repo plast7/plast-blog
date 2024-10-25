@@ -63,6 +63,9 @@ class UserLogoutView(APIView):
 
 
 class RefreshTokenView(APIView):
+    """
+    POST /api/v1/auth/refresh-token
+    """
     def post(self, request):
         refresh_token = request.COOKIES.get(settings.SIMPLE_JWT['AUTH_COOKIE_REFRESH'])
         if refresh_token:
@@ -85,6 +88,9 @@ class RefreshTokenView(APIView):
 
 
 class CheckAuthView(APIView):
+    """
+    GET /api/v1/auth/check-auth
+    """
     def get(self, request):
         user = request.user
         if user.username:
@@ -94,8 +100,8 @@ class CheckAuthView(APIView):
 
 class PostListCreateView(generics.ListCreateAPIView):
     """
-    GET /api/posts
-    POST /api/posts
+    GET /api/v1/posts
+    POST /api/v1/posts
     """
     queryset = Post.objects.all().order_by('-created_at')
     serializer_class = PostSerializer
@@ -111,9 +117,9 @@ class PostListCreateView(generics.ListCreateAPIView):
 
 class PostRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     """
-    GET /api/posts/{id}
-    PUT /api/posts/{id}
-    DELETE /api/posts/{id}
+    GET /api/v1/posts/{id}
+    PUT /api/v1/posts/{id}
+    DELETE /api/v1/posts/{id}
     """
     queryset = Post.objects.all()
     serializer_class = PostSerializer
@@ -126,8 +132,8 @@ class PostRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
 
 class CommentListCreateView(generics.ListCreateAPIView):
     """
-    GET /api/posts/{id}/comments
-    POST /api/posts/{id}/comments
+    GET /api/v1/posts/{id}/comments
+    POST /api/v1/posts/{id}/comments
     """
     serializer_class = CommentSerializer
     
@@ -152,8 +158,8 @@ class CommentListCreateView(generics.ListCreateAPIView):
 
 class CommentRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     """
-    PUT /api/comments/{id}
-    DELETE /api/comments/{id}
+    PUT /api/v1/comments/{id}
+    DELETE /api/v1/comments/{id}
     """
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
